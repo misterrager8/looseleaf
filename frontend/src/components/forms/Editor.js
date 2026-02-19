@@ -5,20 +5,28 @@ import markdownit from "markdown-it";
 import Button from "../atoms/Button";
 import Dropdown from "../atoms/Dropdown";
 import Toolbar from "../Toolbar";
+import { v4 as uuidv4 } from "uuid";
 
 export default function Editor() {
   const multiCtx = useContext(MultiContext);
 
   const [name, setName] = useState("");
-  // const [content, setContent] = useState("");
   const [mode, setMode] = useState(
-    localStorage.getItem("notable-mode") || "split"
+    localStorage.getItem("looseleaf-mode") || "split",
   );
 
   const [deleting, setDeleting] = useState(false);
+  const [fontSize, setFontSize] = useState(
+    localStorage.getItem("looseleaf-font-size") || 0.875,
+  );
 
+  const [mouseX, setMouseX] = useState(null);
+  const [mouseY, setMouseY] = useState(null);
+
+  const onChangeFontSize = (e) => setFontSize(e.target.value);
   const onChangeName = (e) => setName(e.target.value);
   const onChangeContent = (e) => multiCtx.setContent(e.target.value);
+  const [sizeChanged, setSizeChanged] = useState(false);
 
   const [selection, setSelection] = useState({
     start: 0,
@@ -36,19 +44,33 @@ export default function Editor() {
     setSelection({ start: start, end: end, selected: selected });
   };
 
+  const saveFontSize = () => {
+    localStorage.setItem("looseleaf-font-size", fontSize);
+    setSizeChanged(false);
+  };
+
+  useEffect(() => {
+    setSizeChanged(localStorage.getItem("looseleaf-font-size") !== fontSize);
+  }, [fontSize]);
+
   useEffect(() => {
     setName(multiCtx.currentNote?.name);
     multiCtx.setContent(multiCtx.currentNote?.content);
   }, [multiCtx.currentNote]);
 
   useEffect(() => {
-    localStorage.setItem("notable-mode", mode);
+    localStorage.setItem("looseleaf-mode", mode);
   }, [mode]);
 
   return (
     <form onSubmit={(e) => multiCtx.renameNote(e, name)}>
       <div className="d-flex">
         <div className="d-flex my-auto">
+          <Button
+            onClick={() => multiCtx.setCurrentNote(null)}
+            className="px-1"
+            icon="dashicons:exit"
+          />
           <Button
             onClick={() => multiCtx.editNote(multiCtx.content)}
             className={
@@ -59,15 +81,15 @@ export default function Editor() {
             }
             icon={
               multiCtx.currentNote?.content === multiCtx.content
-                ? "check-lg"
-                : "record-fill"
+                ? "dashicons:saved"
+                : "carbon:unsaved"
             }
           />
         </div>
         <Input className="title-input" value={name} onChange={onChangeName} />
         <div className="d-flex my-auto">
           <Dropdown
-            icon="folder"
+            icon="game-icons:tree-branch"
             target="change-folder"
             text={
               multiCtx.currentNote.folder ? multiCtx.currentNote.folder : "-"
@@ -79,6 +101,7 @@ export default function Editor() {
             </a>
             {multiCtx.folders.map((x) => (
               <a
+                key={uuidv4()}
                 onClick={() => multiCtx.changeFolder(x.name)}
                 className={
                   "dropdown-item" +
@@ -90,8 +113,11 @@ export default function Editor() {
           </Dropdown>
 
           <Button
+            className="red"
             onClick={() => multiCtx.toggleBookmark()}
-            icon={"bookmark" + (multiCtx.currentNote?.favorited ? "-fill" : "")}
+            icon={
+              "bi:bookmark" + (multiCtx.currentNote?.favorited ? "-fill" : "")
+            }
           />
           {deleting && (
             <Button
@@ -100,52 +126,94 @@ export default function Editor() {
                 multiCtx.deleteNote();
                 setDeleting(false);
               }}
-              icon="question-lg"
+              icon="pepicons-pop:question"
             />
           )}
           <Button
             className="red"
             onClick={() => setDeleting(!deleting)}
-            icon="trash2"
+            icon="tdesign:delete-1"
           />
 
           <Button
             onClick={() => setMode("write")}
             active={mode === "write"}
-            icon="pencil"
+            icon="streamline-ultimate:content-pen-write"
           />
           <Button
             onClick={() => setMode("read")}
             active={mode === "read"}
-            icon="eye"
+            icon="gg:read"
           />
           <Button
             onClick={() => setMode("split")}
             active={mode === "split"}
-            icon="layout-split"
+            icon="sidekickicons:view-split-20-solid"
           />
         </div>
       </div>
-      {["split", "write"].includes(mode) && <Toolbar selection={selection} />}
       <div className="d-flex editor mt-3">
         {["split", "write"].includes(mode) && (
-          <textarea
-            onMouseUp={() => getSelection()}
-            id="editor"
-            autoComplete="off"
-            className="form-control font-monospace col"
-            value={multiCtx.content}
-            onChange={onChangeContent}></textarea>
+          <>
+            <textarea
+              onClick={(e) => {
+                setMouseX(e.clientX);
+                setMouseY(e.clientY);
+              }}
+              style={{ fontSize: `${fontSize}rem` }}
+              onMouseUp={() => getSelection()}
+              id="editor"
+              autoComplete="off"
+              className="form-control font-monospace col"
+              value={multiCtx.content}
+              onChange={onChangeContent}></textarea>
+            {selection.selected.length > 0 && (
+              <div
+                className="popup"
+                style={{
+                  top: `${mouseY + 20}px`,
+                  // left: `${mouseX}px`,
+                }}>
+                <Toolbar selection={selection} />
+              </div>
+            )}
+          </>
         )}
         {mode === "split" && <div className="divider-y"></div>}
         {["split", "read"].includes(mode) && (
           <div
+            style={{ fontSize: `${fontSize}rem` }}
             className="col overflow-auto"
             id="reader"
             dangerouslySetInnerHTML={{
               __html: markdownit({ html: true }).render(multiCtx.content),
             }}></div>
         )}
+      </div>
+      <div className="between mt-2">
+        <div className="" style={{ width: "20%" }}>
+          <Button
+            icon={sizeChanged ? "carbon:unsave" : "dashicons:saved"}
+            className={"w-25" + (sizeChanged ? " orange" : "")}
+            onClick={() => saveFontSize()}
+          />
+          <Button
+            disabled={fontSize === 0.875}
+            className="w-75"
+            text={`${fontSize} rem`}
+            onClick={() => setFontSize(0.875)}
+          />
+        </div>
+        <input
+          style={{ width: "80%" }}
+          step={0.025}
+          min={0.875}
+          max={10}
+          className="form-range my-auto"
+          type="range"
+          value={fontSize}
+          onChange={onChangeFontSize}
+        />
       </div>
     </form>
   );

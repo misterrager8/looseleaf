@@ -11,25 +11,38 @@ export default function MultiProvider({ children }) {
   const [notes, setNotes] = useState([]);
   const [folders, setFolders] = useState([]);
   const [currentNote, setCurrentNote] = useState(
-    JSON.parse(localStorage.getItem("notable-last-opened"))
+    JSON.parse(localStorage.getItem("looseleaf-last-opened"))
   );
   const [currentFolder, setCurrentFolder] = useState(null);
-  const [sort, setSort] = useState("favorited");
+  const [sort, setSort] = useState(
+    localStorage.getItem("looseleaf-sort") || "favorited"
+  );
 
   const [mode, setMode] = useState(
-    localStorage.getItem("notable-mode") || "split"
+    localStorage.getItem("looseleaf-mode") || "split"
   );
   const [content, setContent] = useState("");
 
   const [searchResults, setSearchResults] = useState([]);
+  const [homeDir, setHomeDir] = useState(
+    localStorage.getItem("looseleaf-home-dir")
+  );
 
-  const getAll = () =>
-    api("get_all", { folder: currentFolder, sort: sort }, (data) => {
-      setNotes(data.notes);
-      setFolders(data.folders);
-    });
+  const getAll = () => {
+    setLoading(true);
+    api(
+      "get_all",
+      { path: homeDir, folder: currentFolder, sort: sort },
+      (data) => {
+        setNotes(data.notes);
+        setFolders(data.folders);
+        setLoading(false);
+      }
+    );
+  };
 
   const createNote = () => {
+    setLoading(true);
     api(
       "add_note",
       {
@@ -40,11 +53,13 @@ export default function MultiProvider({ children }) {
         setNotes(data.notes);
         setCurrentNote(data.note);
         setFolders(data.folders);
+        setLoading(false);
       }
     );
   };
 
   const editNote = (content) => {
+    setLoading(true);
     api(
       "edit_note",
       {
@@ -57,11 +72,13 @@ export default function MultiProvider({ children }) {
         setNotes(data.notes);
         setCurrentNote(data.note);
         setFolders(data.folders);
+        setLoading(false);
       }
     );
   };
 
   const deleteNote = () => {
+    setLoading(true);
     api(
       "delete_note",
       {
@@ -73,11 +90,13 @@ export default function MultiProvider({ children }) {
         setNotes(data.notes);
         setCurrentNote(null);
         setFolders(data.folders);
+        setLoading(false);
       }
     );
   };
 
   const toggleBookmark = () => {
+    setLoading(true);
     api(
       "toggle_bookmark",
       {
@@ -89,11 +108,13 @@ export default function MultiProvider({ children }) {
         setNotes(data.notes);
         setCurrentNote(data.note);
         setFolders(data.folders);
+        setLoading(false);
       }
     );
   };
 
   const changeFolder = (newFolder) => {
+    setLoading(true);
     api(
       "change_folder",
       {
@@ -106,11 +127,13 @@ export default function MultiProvider({ children }) {
         setNotes(data.notes);
         setCurrentNote(data.note);
         setFolders(data.folders);
+        setLoading(false);
       }
     );
   };
 
   const renameNote = (e, newName) => {
+    setLoading(true);
     e.preventDefault();
     api(
       "rename_note",
@@ -124,11 +147,13 @@ export default function MultiProvider({ children }) {
         setNotes(data.notes);
         setCurrentNote(data.note);
         setFolders(data.folders);
+        setLoading(false);
       }
     );
   };
 
   const searchNotes = (e, query) => {
+    setLoading(true);
     e.preventDefault();
     api(
       "search",
@@ -137,11 +162,13 @@ export default function MultiProvider({ children }) {
       },
       (data) => {
         setSearchResults(data.results);
+        setLoading(false);
       }
     );
   };
 
   const getNote = (path) => {
+    setLoading(true);
     api(
       "get_note",
       {
@@ -149,11 +176,13 @@ export default function MultiProvider({ children }) {
       },
       (data) => {
         setCurrentNote(data.note);
+        setLoading(false);
       }
     );
   };
 
   const addFolder = () => {
+    setLoading(true);
     api(
       "add_folder",
       {
@@ -164,11 +193,13 @@ export default function MultiProvider({ children }) {
         setNotes(data.notes);
         setFolders(data.folders);
         setCurrentFolder(data.folder.name);
+        setLoading(false);
       }
     );
   };
 
   const renameFolder = (e, folder, newName) => {
+    setLoading(true);
     e.preventDefault();
     api(
       "rename_folder",
@@ -181,11 +212,13 @@ export default function MultiProvider({ children }) {
       (data) => {
         setNotes(data.notes);
         setFolders(data.folders);
+        setLoading(false);
       }
     );
   };
 
   const deleteFolder = (name) => {
+    setLoading(true);
     api(
       "delete_folder",
       {
@@ -196,25 +229,30 @@ export default function MultiProvider({ children }) {
       (data) => {
         setNotes(data.notes);
         setFolders(data.folders);
+        setLoading(false);
       }
     );
   };
 
   useEffect(() => {
-    getAll();
+    homeDir && getAll();
     /* eslint-disable react-hooks/exhaustive-deps */
   }, [currentFolder, sort]);
+
+  useEffect(() => {
+    localStorage.setItem("looseleaf-sort", sort);
+  }, [sort]);
 
   useEffect(() => {
     !showSide && setShowFolders(false);
   }, [showSide]);
 
   useEffect(() => {
-    localStorage.setItem("notable-last-opened", JSON.stringify(currentNote));
+    localStorage.setItem("looseleaf-last-opened", JSON.stringify(currentNote));
   }, [currentNote]);
 
   useEffect(() => {
-    localStorage.setItem("notable-mode", mode);
+    localStorage.setItem("looseleaf-mode", mode);
   }, [mode]);
 
   const contextValue = {
@@ -263,6 +301,9 @@ export default function MultiProvider({ children }) {
     setSearchResults: setSearchResults,
 
     getNote: getNote,
+
+    homeDir: homeDir,
+    setHomeDir: setHomeDir,
   };
 
   return (

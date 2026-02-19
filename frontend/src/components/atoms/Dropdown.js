@@ -1,3 +1,5 @@
+import { Icon } from "@iconify/react";
+
 export default function Dropdown({
   text,
   icon,
@@ -20,8 +22,8 @@ export default function Dropdown({
           (border ? "" : " border-0") +
           (showCaret ? " dropdown-toggle" : "")
         }>
-        {icon && <i className={"bi bi-" + icon + (text ? " me-2" : "")}></i>}
-        {text && <span>{text}</span>}
+        {icon && <Icon inline icon={icon} />}
+        {text && <span className={icon ? "ms-2" : ""}>{text}</span>}
       </a>
       <div className={classNameMenu + " dropdown-menu"}>{children}</div>
     </>

@@ -90,10 +90,15 @@ a:hover {
 }
 
 .form-control,
+.form-control:disabled,
 .form-control:focus {
   background-color: transparent;
   color: var(--primary-txt);
   border-color: var(--primary-txt);
+}
+
+.form-control:disabled {
+  opacity: 50%;
 }
 
 ::placeholder {
@@ -105,7 +110,7 @@ a:hover {
 textarea {
   resize: none;
   border: 0 !important;
-  height: 81vh;
+  height: 77vh;
 }
 
 .note-item {
@@ -165,7 +170,7 @@ textarea {
 }
 
 .editor {
-  height: 81vh;
+  height: 77vh;
 }
 
 .nav-x {
@@ -178,31 +183,36 @@ textarea {
   padding: 10px;
 }
 
+.purple {
+  color: var(--purple);
+}
+
 .btn.green {
-  color: rgb(66, 115, 66);
-  border-color: rgb(66, 115, 66);
+  color: var(--green);
+  border-color: var(--green);
 }
 
 .btn.green:hover {
-  background-color: rgb(66, 115, 66);
+  background-color: var(--green);
   color: var(--btn-hover-txt);
 }
 
 .btn.orange {
-  color: rgb(255, 94, 0);
+  color: var(--orange);
 }
 
 .btn.orange:hover {
-  background-color: rgb(255, 94, 0);
+  background-color: var(--orange);
   color: var(--btn-hover-txt);
 }
 
+.red,
 .btn.red {
-  color: rgb(240, 84, 45);
+  color: var(--red);
 }
 
 .btn.red:hover {
-  background-color: rgb(240, 84, 45);
+  background-color: var(--red);
   color: var(--btn-hover-txt);
 }
 
@@ -210,37 +220,81 @@ textarea {
   color: var(--btn-color);
 }
 
-.dropdown-item:hover .icon {
+.dropdown-item:hover .iconify {
   color: var(--btn-hover-txt);
 }
 
 #reader a {
-  color: var(--btn-color);
+  color: var(--orange);
   text-decoration: underline;
+  letter-spacing: 1px;
+  font-style: italic;
 }
 
 #reader code,
 #reader pre {
-  color: var(--btn-color);
+  color: var(--orange);
+}
+
+#reader pre {
+  background-color: var(--secondary-color);
+  width: 75%;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 20px;
+  border-radius: 5px;
 }
 
 #reader mark {
-  background-color: var(--btn-color);
+  background-color: var(--orange);
   color: var(--btn-hover-txt);
   border-radius: 3px;
+  padding: 0px 5px;
+  font-style: italic;
+  font-weight: bold;
 }
 
 #reader img {
-  max-width: 99%;
+  max-width: 100%;
 }
 
-.toolbar {
-  display: flex;
-  overflow-x: auto;
+#reader s {
+  opacity: 50%;
 }
 
 .toolbar .btn {
   text-overflow: unset;
+  font-size: 1.1rem;
+}
+
+::-webkit-slider-thumb {
+  background-color: var(--btn-color) !important;
+}
+
+::-webkit-slider-runnable-track {
+  background-color: transparent !important;
+  border: 0.5px solid var(--btn-color) !important;
+}
+
+.popup {
+  position: absolute;
+  z-index: 1000;
+  width: 75%;
+  /* width: 350px; */
+  height: 115px;
+  border: 0.5px solid var(--btn-color);
+  border-radius: 5px;
+  background-color: var(--primary-bg);
+  padding: 10px;
+  overflow-x: auto;
+}
+
+.spinner-border {
+  color: var(--btn-color);
+}
+
+.iconify {
+  font-size: 1rem;
 }
 
 @media screen and (max-width: 1050px) {
@@ -264,10 +318,15 @@ textarea {
   }
 
   .editor {
-    height: 73vh;
+    height: 69vh;
   }
 
   textarea {
-    height: 74vh;
+    height: 69vh;
+  }
+
+  .popup {
+    width: 95%;
+    height: 210px;
   }
 }

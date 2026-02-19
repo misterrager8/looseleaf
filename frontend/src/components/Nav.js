@@ -7,6 +7,8 @@ import NoteItem from "./items/NoteItem";
 import Icon from "./atoms/Icon";
 import Badge from "./atoms/Badge";
 import FolderItem from "./items/FolderItem";
+import Spinner from "./atoms/Spinner";
+import { v4 as uuidv4 } from "uuid";
 
 export const FolderContext = createContext();
 
@@ -14,33 +16,33 @@ export default function Nav() {
   const multiCtx = useContext(MultiContext);
 
   const [theme, setTheme] = useState(
-    localStorage.getItem("notable-theme") || "light"
+    localStorage.getItem("looseleaf-theme") || "light",
   );
   const [showFolders, setShowFolders] = useState(false);
 
   useEffect(() => {
-    localStorage.setItem("notable-theme", theme);
+    localStorage.setItem("looseleaf-theme", theme);
     document.documentElement.setAttribute("data-theme", theme);
   }, [theme]);
 
   const sorts = [
     {
-      icon: "bookmark-fill",
+      icon: "mingcute:bookmark-fill",
       label: "Favorited",
       value: "favorited",
     },
     {
-      icon: "type",
+      icon: "material-symbols:abc",
       label: "Name",
       value: "name",
     },
     {
-      icon: "plus-lg",
+      icon: "gridicons:create",
       label: "Date Created",
       value: "date_created",
     },
     {
-      icon: "pencil",
+      icon: "meteor-icons:pencil",
       label: "Last Modified",
       value: "last_modified",
     },
@@ -48,26 +50,36 @@ export default function Nav() {
 
   const themes = [
     "light",
-    "strawberry",
-    "raspberry",
-    "lavender",
-    "sky",
-    "sepia",
-    "coconut",
-    "jade",
+    "nebula-sapphire",
+    "sky-navy",
+    "navy-bumblebee",
+    "double-plum",
+    "lavender-sky",
+    "lavender-emerald",
+    "ruby-marmalade",
+    "aqua-marigold",
+    "raven-mustard",
     "dark",
-    "plum",
-    "walnut",
-    "aqua",
-    "olive",
+    "aqua-lilac",
+    "eggplant-plum",
+    "citrus-apple",
+    "grass-ice",
+    "moss-lime",
+    "eggplant-sky",
+    "marigold-sky",
+    "evergreen-nebula",
   ];
 
   return (
     <>
       <div className="nav-y">
-        <div>
-          <div className="between">
-            <div>
+        <div className="between">
+          <div className="d-flex">
+            {multiCtx.loading ? (
+              <div className="my-auto">
+                <Spinner />
+              </div>
+            ) : (
               <Button
                 onClick={() => {
                   showFolders ? multiCtx.addFolder() : multiCtx.createNote();
@@ -75,112 +87,123 @@ export default function Nav() {
                 border={true}
                 className="green"
                 text={"New " + (showFolders ? "Folder" : "Note")}
-                icon="plus-lg"
+                icon="mdi:leaf"
               />
-            </div>
-            <Dropdown
-              text={theme}
-              classNameBtn="text-capitalize"
-              classNameMenu="text-center"
-              target="themes"
-              icon="paint-bucket"
-              showCaret={false}>
-              {themes.map((x) => (
-                <a
-                  onClick={() => setTheme(x)}
-                  className={
-                    (theme === x ? "active" : "") +
-                    " dropdown-item text-capitalize"
-                  }>
-                  {x}
-                </a>
-              ))}
-            </Dropdown>
-          </div>
-          {/* <Search className="mt-3" /> */}
-          <div className="between mt-3">
-            <div>
-              {multiCtx.currentFolder && (
-                <Button
-                  className="px-1"
-                  onClick={() => multiCtx.setCurrentFolder(null)}
-                  icon="chevron-compact-left"
-                />
-              )}
-              <Button
-                active={showFolders || multiCtx.currentFolder}
-                onClick={() => setShowFolders(!showFolders)}
-                icon="folder"
-                text={
-                  multiCtx.currentFolder ? multiCtx.currentFolder : "All Notes"
-                }
-              />
-            </div>
-            <Dropdown
-              target="sort-notes"
-              icon={sorts.find((x) => x.value === multiCtx.sort)?.icon}
-              text={sorts.find((x) => x.value === multiCtx.sort)?.label}>
-              {sorts.map((x) => (
-                <a
-                  className={
-                    "dropdown-item" +
-                    (x.value === multiCtx.sort ? " active" : "")
-                  }
-                  onClick={() => multiCtx.setSort(x.value)}>
-                  <Icon name={x.icon} className="me-2" />
-                  {x.label}
-                </a>
-              ))}
-            </Dropdown>
-          </div>
-          <div
-            className="mt-3"
-            style={{
-              height: "85vh",
-              overflowY: "auto",
-            }}>
-            {showFolders ? (
-              <FolderContext.Provider
-                value={{
-                  showFolders: showFolders,
-                  setShowFolders: setShowFolders,
-                }}>
-                {multiCtx.folders.map((x) => (
-                  <FolderItem item={x} />
-                ))}
-              </FolderContext.Provider>
-            ) : (
-              <>
-                {multiCtx.notes.map((x) => (
-                  <NoteItem item={x} />
-                ))}
-              </>
             )}
           </div>
+          <Dropdown
+            classNameBtn="text-capitalize"
+            classNameMenu="text-center"
+            target="themes"
+            showCaret={true}
+            icon="bxs:color-fill">
+            {themes.map((x) => (
+              <a
+                key={uuidv4()}
+                onClick={() => setTheme(x)}
+                className={
+                  (theme === x ? "active" : "") +
+                  " dropdown-item text-capitalize"
+                }>
+                {x}
+              </a>
+            ))}
+          </Dropdown>
+        </div>
+        {/* <Search className="mt-3" /> */}
+        <div className="between mt-3">
+          <div>
+            {multiCtx.currentFolder && (
+              <Button
+                className="px-1"
+                onClick={() => multiCtx.setCurrentFolder(null)}
+                icon="garden:chevron-double-left-fill-12"
+              />
+            )}
+            <Button
+              active={showFolders || multiCtx.currentFolder}
+              onClick={() => setShowFolders(!showFolders)}
+              icon="game-icons:tree-branch"
+              text={
+                multiCtx.currentFolder
+                  ? multiCtx.currentFolder
+                  : `All Notes (${multiCtx.notes.length})`
+              }
+            />
+          </div>
+          <Dropdown
+            target="sort-notes"
+            icon={sorts.find((x) => x.value === multiCtx.sort)?.icon}
+            text={sorts.find((x) => x.value === multiCtx.sort)?.label}>
+            {sorts.map((x) => (
+              <a
+                key={uuidv4()}
+                className={
+                  "dropdown-item" + (x.value === multiCtx.sort ? " active" : "")
+                }
+                onClick={() => multiCtx.setSort(x.value)}>
+                <Icon name={x.icon} className="me-2" />
+                {x.label}
+              </a>
+            ))}
+          </Dropdown>
+        </div>
+        <div
+          className="mt-3"
+          style={{
+            height: "85vh",
+            overflowY: "auto",
+          }}>
+          {showFolders ? (
+            <FolderContext.Provider
+              value={{
+                showFolders: showFolders,
+                setShowFolders: setShowFolders,
+              }}>
+              {multiCtx.folders.map((x) => (
+                <FolderItem key={uuidv4()} item={x} />
+              ))}
+            </FolderContext.Provider>
+          ) : (
+            <>
+              {multiCtx.notes.map((x) => (
+                <NoteItem key={uuidv4()} item={x} />
+              ))}
+            </>
+          )}
         </div>
       </div>
       <div className="nav-x">
         <div className="d-flex">
-          <Button
-            onClick={() => multiCtx.createNote()}
-            border={true}
-            className="green me-3"
-            text="New Note"
-            icon="plus-lg"
-          />
+          {multiCtx.loading ? (
+            <div className="my-auto me-3">
+              <Spinner />
+            </div>
+          ) : (
+            <Button
+              onClick={() => multiCtx.createNote()}
+              border={true}
+              className="green me-3"
+              text="New Leaf"
+              icon="mdi:leaf"
+            />
+          )}
           {multiCtx.currentFolder && (
             <Button
               onClick={() => multiCtx.setCurrentFolder(null)}
               className="px-1"
-              icon="chevron-compact-left"
+              icon="garden:chevron-double-left-fill-12"
             />
           )}
           <Dropdown
             showCaret={false}
-            text={multiCtx.currentFolder || "All Notes"}
+            text={
+              multiCtx.currentFolder || `All Notes (${multiCtx.notes.length})`
+            }
             target="folders">
             {multiCtx.folders.map((x) => (
               <a
+                key={uuidv4()}
                 onClick={() => multiCtx.setCurrentFolder(x.name)}
                 className={
                   "dropdown-item between" +
@@ -191,14 +214,14 @@ export default function Nav() {
                   <Badge
                     className="my-auto p-0"
                     border={false}
-                    icon="record-fill"
+                    icon="mdi:leaf"
                     text={x.notes}
                   />
                 )}
               </a>
             ))}
           </Dropdown>
-          <Icon className="my-auto" name="slash-lg" />
+          <Icon className="my-auto" name="lucide:slash" />
           <Dropdown
             classNameBtn="px-2"
             showCaret={false}
@@ -212,6 +235,7 @@ export default function Nav() {
               }}>
               {multiCtx.notes.map((x) => (
                 <a
+                  key={uuidv4()}
                   title={x.name}
                   onClick={() => multiCtx.setCurrentNote(x)}
                   className={
@@ -220,11 +244,13 @@ export default function Nav() {
                   }>
                   <div className="d-flex text-truncate">
                     {x.favorited && (
-                      <Icon className="me-2" name="bookmark-fill" />
+                      <Icon className="me-2" name="mingcute:bookmark-fill" />
                     )}
                     <span className="text-truncate">{x.name}</span>
                   </div>
-                  {x.folder && <Badge icon="folder" text={x.folder} />}
+                  {x.folder && (
+                    <Badge icon="game-icons:tree-branch" text={x.folder} />
+                  )}
                 </a>
               ))}
             </div>
@@ -233,7 +259,7 @@ export default function Nav() {
             <Button
               onClick={() => multiCtx.setCurrentNote(null)}
               className="px-1"
-              icon="x"
+              icon="dashicons:exit"
             />
           )}
         </div>
@@ -242,10 +268,11 @@ export default function Nav() {
             classNameBtn="text-capitalize"
             classNameMenu="text-center"
             target="themes"
-            icon="paint-bucket"
-            showCaret={false}>
+            icon="bxs:color-fill"
+            showCaret={true}>
             {themes.map((x) => (
               <a
+                key={uuidv4()}
                 onClick={() => setTheme(x)}
                 className={
                   (theme === x ? "active" : "") +

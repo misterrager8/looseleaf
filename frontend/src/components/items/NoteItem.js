@@ -14,20 +14,26 @@ export default function NoteItem({ item }) {
       }
       onClick={() =>
         multiCtx.setCurrentNote(
-          multiCtx.currentNote?.path === item.path ? null : item
+          multiCtx.currentNote?.path === item.path ? null : item,
         )
       }>
       <div className="between">
         <div title={item.name} className="text-truncate">
           {item.name}
         </div>
-        {item.favorited && <Icon name="bookmark-fill" />}
+        {item.favorited && (
+          <Icon className="red" name="mingcute:bookmark-fill" />
+        )}
       </div>
       <div className="between mt-3">
         <div className="small opacity-50 d-flex me-3">
           <Icon
             className="me-1"
-            name={multiCtx.sort === "date_created" ? "plus-lg" : "pencil"}
+            name={
+              multiCtx.sort === "date_created"
+                ? "gridicons:create"
+                : "meteor-icons:pencil"
+            }
           />
           <span
             title={
@@ -41,7 +47,9 @@ export default function NoteItem({ item }) {
               : item.last_modified}
           </span>
         </div>
-        {item.folder && <Badge text={item.folder} icon="folder" />}
+        {item.folder && (
+          <Badge text={item.folder} icon="game-icons:tree-branch" />
+        )}
       </div>
     </div>
   );

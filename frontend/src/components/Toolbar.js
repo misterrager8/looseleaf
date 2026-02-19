@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { MultiContext } from "../context";
 import Button from "./atoms/Button";
+import { v4 as uuidv4 } from "uuid";
 
 export default function Toolbar({ selection, className = "" }) {
   const multiCtx = useContext(MultiContext);
@@ -31,32 +32,32 @@ export default function Toolbar({ selection, className = "" }) {
 
   const formats = [
     {
-      icon: "type-bold",
+      icon: "bi:type-bold",
       label: "bold",
       format: `**${selection.selected}**`,
     },
     {
-      icon: "type-italic",
+      icon: "bi:type-italic",
       label: "italic",
       format: `*${selection.selected}*`,
     },
     {
-      icon: "type-h1",
+      icon: "bi:type-h1",
       label: "heading",
       format: `### ${selection.selected}`,
     },
     {
-      icon: "hr",
+      icon: "bi:hr",
       label: "hrule",
       format: "\n---\n",
     },
     {
-      icon: "sort-down-alt",
+      icon: "bi:sort-down-alt",
       label: "sort",
       format: `${selection.selected.split("\n").toSorted().join("\n")}`,
     },
     {
-      icon: "sort-down",
+      icon: "bi:sort-down",
       label: "sort-reverse",
       format: `${selection.selected
         .split("\n")
@@ -65,54 +66,54 @@ export default function Toolbar({ selection, className = "" }) {
         .join("\n")}`,
     },
     {
-      icon: "list-ul",
+      icon: "bi:list-ul",
       label: "bullet-list",
       format: `- ${selection.selected.split("\n").join("\n- ")}`,
     },
     {
-      icon: "check-lg",
+      icon: "bi:check-lg",
       label: "check",
-      format: `✓`,
+      format: `✓ ${selection.selected}`,
     },
     {
-      icon: "code-slash",
+      icon: "bi:code-slash",
       label: "code",
       format: `\`\`\`${selection.selected}\`\`\``,
     },
     {
-      icon: "code",
+      icon: "bi:code",
       label: "code-inline",
       format: `\`${selection.selected}\``,
     },
     {
-      icon: "image",
+      icon: "bi:image",
       label: "image",
-      format: `![${selection.selected}]()`,
+      format: `![text](url)`,
     },
     {
-      icon: "link",
+      icon: "bi:link",
       label: "link",
-      format: `[](${selection.selected})`,
+      format: `[text](url)`,
     },
     {
-      icon: "type",
+      icon: "bi:type",
       label: "capitalize",
       format: `${
         selection.selected.charAt(0).toUpperCase() + selection.selected.slice(1)
       }`,
     },
     {
-      icon: "alphabet-uppercase",
+      icon: "bi:alphabet-uppercase",
       label: "allcaps",
       format: `${selection.selected.toUpperCase()}`,
     },
     {
-      icon: "alphabet",
+      icon: "bi:alphabet",
       label: "alllower",
       format: `${selection.selected.toLowerCase()}`,
     },
     {
-      icon: "indent",
+      icon: "bi:indent",
       label: "indent",
       format: `  ${selection.selected}`,
     },
@@ -142,27 +143,27 @@ export default function Toolbar({ selection, className = "" }) {
       format: `"${selection.selected}"`,
     },
     {
-      icon: "calendar",
+      icon: "bi:calendar",
       label: "date-1",
       format: `${new Date().getDate()} ${monthNames[new Date().getMonth()]}`,
     },
     {
-      icon: "clock",
+      icon: "bi:clock",
       label: "date-3",
       format: formatDate(),
     },
     {
-      icon: "highlighter",
+      icon: "bi:highlighter",
       label: "highlighter",
       format: `<mark>${selection.selected}</mark>`,
     },
     {
-      icon: "superscript",
+      icon: "bi:superscript",
       label: "superscript",
       format: `<sup>${selection.selected}</sup>`,
     },
     {
-      icon: "type-strikethrough",
+      icon: "bi:type-strikethrough",
       label: "type-strikethrough",
       format: `~~${selection.selected}~~`,
     },
@@ -181,6 +182,7 @@ export default function Toolbar({ selection, className = "" }) {
     <div className={className + " toolbar"}>
       {formats.map((x) => (
         <Button
+          key={uuidv4()}
           truncate={false}
           className="m-1"
           icon={x.icon}

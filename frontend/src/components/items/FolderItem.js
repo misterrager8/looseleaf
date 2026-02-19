@@ -42,7 +42,7 @@ export default function FolderItem({ item }) {
           <Badge
             border={false}
             className="my-auto"
-            icon="record-fill"
+            icon="mdi:leaf"
             text={item.notes}
           />
         )}
@@ -50,7 +50,7 @@ export default function FolderItem({ item }) {
           className="px-2"
           active={editing}
           onClick={() => setEditing(!editing)}
-          icon="pencil"
+          icon="streamline-ultimate:content-pen-write"
         />
         {deleting && (
           <Button
@@ -59,13 +59,13 @@ export default function FolderItem({ item }) {
               multiCtx.setCurrentFolder(null);
             }}
             className="red px-2"
-            icon="question-lg"
+            icon="pepicons-pop:question"
           />
         )}
         <Button
           onClick={() => setDeleting(!deleting)}
           className="red px-2"
-          icon="trash2"
+          icon="tdesign:delete-1"
         />
       </div>
     </div>
