@@ -95,8 +95,8 @@ export default function Nav() {
             classNameBtn="text-capitalize"
             classNameMenu="text-center"
             target="themes"
-            showCaret={true}
-            icon="bxs:color-fill">
+            icon="bxs:color-fill"
+            showCaret={true}>
             {themes.map((x) => (
               <a
                 key={uuidv4()}

@@ -113,6 +113,10 @@ textarea {
   height: 77vh;
 }
 
+textarea.full {
+  height: 90vh;
+}
+
 .note-item {
   cursor: pointer;
   border-bottom: 0.5px solid var(--secondary-color);
@@ -171,6 +175,10 @@ textarea {
 
 .editor {
   height: 77vh;
+}
+
+.editor-focused {
+  height: 90vh;
 }
 
 .nav-x {
@@ -233,7 +241,7 @@ textarea {
 
 #reader code,
 #reader pre {
-  color: var(--orange);
+  color: var(--indigo);
 }
 
 #reader pre {
@@ -319,6 +327,10 @@ textarea {
 
   .editor {
     height: 69vh;
+  }
+
+  .editor-focused {
+    height: 90vh;
   }
 
   textarea {

@@ -11,21 +11,29 @@ export default function MultiProvider({ children }) {
   const [notes, setNotes] = useState([]);
   const [folders, setFolders] = useState([]);
   const [currentNote, setCurrentNote] = useState(
-    JSON.parse(localStorage.getItem("looseleaf-last-opened"))
+    JSON.parse(localStorage.getItem("looseleaf-last-opened")),
   );
   const [currentFolder, setCurrentFolder] = useState(null);
   const [sort, setSort] = useState(
-    localStorage.getItem("looseleaf-sort") || "favorited"
+    localStorage.getItem("looseleaf-sort") || "favorited",
   );
 
   const [mode, setMode] = useState(
-    localStorage.getItem("looseleaf-mode") || "split"
+    localStorage.getItem("looseleaf-mode") || "split",
   );
   const [content, setContent] = useState("");
 
   const [searchResults, setSearchResults] = useState([]);
   const [homeDir, setHomeDir] = useState(
-    localStorage.getItem("looseleaf-home-dir")
+    localStorage.getItem("looseleaf-home-dir"),
+  );
+
+  const [distractionFree, setDistractionFree] = useState(
+    localStorage.getItem("looseleaf-distraction-free") === "true",
+  );
+
+  const [fontSize, setFontSize] = useState(
+    localStorage.getItem("looseleaf-font-size") || 0.875,
   );
 
   const getAll = () => {
@@ -37,7 +45,7 @@ export default function MultiProvider({ children }) {
         setNotes(data.notes);
         setFolders(data.folders);
         setLoading(false);
-      }
+      },
     );
   };
 
@@ -54,7 +62,7 @@ export default function MultiProvider({ children }) {
         setCurrentNote(data.note);
         setFolders(data.folders);
         setLoading(false);
-      }
+      },
     );
   };
 
@@ -73,7 +81,7 @@ export default function MultiProvider({ children }) {
         setCurrentNote(data.note);
         setFolders(data.folders);
         setLoading(false);
-      }
+      },
     );
   };
 
@@ -91,7 +99,7 @@ export default function MultiProvider({ children }) {
         setCurrentNote(null);
         setFolders(data.folders);
         setLoading(false);
-      }
+      },
     );
   };
 
@@ -109,7 +117,7 @@ export default function MultiProvider({ children }) {
         setCurrentNote(data.note);
         setFolders(data.folders);
         setLoading(false);
-      }
+      },
     );
   };
 
@@ -128,7 +136,7 @@ export default function MultiProvider({ children }) {
         setCurrentNote(data.note);
         setFolders(data.folders);
         setLoading(false);
-      }
+      },
     );
   };
 
@@ -148,7 +156,7 @@ export default function MultiProvider({ children }) {
         setCurrentNote(data.note);
         setFolders(data.folders);
         setLoading(false);
-      }
+      },
     );
   };
 
@@ -163,7 +171,7 @@ export default function MultiProvider({ children }) {
       (data) => {
         setSearchResults(data.results);
         setLoading(false);
-      }
+      },
     );
   };
 
@@ -177,7 +185,7 @@ export default function MultiProvider({ children }) {
       (data) => {
         setCurrentNote(data.note);
         setLoading(false);
-      }
+      },
     );
   };
 
@@ -194,7 +202,7 @@ export default function MultiProvider({ children }) {
         setFolders(data.folders);
         setCurrentFolder(data.folder.name);
         setLoading(false);
-      }
+      },
     );
   };
 
@@ -213,7 +221,7 @@ export default function MultiProvider({ children }) {
         setNotes(data.notes);
         setFolders(data.folders);
         setLoading(false);
-      }
+      },
     );
   };
 
@@ -230,7 +238,7 @@ export default function MultiProvider({ children }) {
         setNotes(data.notes);
         setFolders(data.folders);
         setLoading(false);
-      }
+      },
     );
   };
 
@@ -254,6 +262,14 @@ export default function MultiProvider({ children }) {
   useEffect(() => {
     localStorage.setItem("looseleaf-mode", mode);
   }, [mode]);
+
+  useEffect(() => {
+    if (distractionFree) {
+      localStorage.setItem("looseleaf-distraction-free", "true");
+    } else {
+      localStorage.removeItem("looseleaf-distraction-free");
+    }
+  }, [distractionFree]);
 
   const contextValue = {
     loading: loading,
@@ -304,6 +320,11 @@ export default function MultiProvider({ children }) {
 
     homeDir: homeDir,
     setHomeDir: setHomeDir,
+    distractionFree: distractionFree,
+    setDistractionFree: setDistractionFree,
+
+    fontSize: fontSize,
+    setFontSize: setFontSize,
   };
 
   return (
