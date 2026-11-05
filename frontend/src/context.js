@@ -5,6 +5,10 @@ export const MultiContext = createContext();
 
 export default function MultiProvider({ children }) {
   const [loading, setLoading] = useState(false);
+  const [theme, setTheme] = useState(
+    localStorage.getItem("looseleaf-theme") || "light",
+  );
+
   const [showSide, setShowSide] = useState(false);
   const [showFolders, setShowFolders] = useState(false);
 
@@ -243,6 +247,11 @@ export default function MultiProvider({ children }) {
   };
 
   useEffect(() => {
+    localStorage.setItem("looseleaf-theme", theme);
+    document.documentElement.setAttribute("data-theme", theme);
+  }, [theme]);
+
+  useEffect(() => {
     homeDir && getAll();
     /* eslint-disable react-hooks/exhaustive-deps */
   }, [currentFolder, sort]);
@@ -274,6 +283,8 @@ export default function MultiProvider({ children }) {
   const contextValue = {
     loading: loading,
     setLoading: setLoading,
+    theme: theme,
+    setTheme: setTheme,
 
     showSide: showSide,
     setShowSide: setShowSide,

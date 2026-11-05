@@ -32,6 +32,14 @@ export default function Display() {
     },
   );
 
+  useHotkeys(
+    "meta+d",
+    () => multiCtx.setTheme(multiCtx.theme === "light" ? "dark" : "light"),
+    {
+      preventDefault: true,
+      enableOnFormTags: true,
+    },
+  );
   return (
     <div>
       {!multiCtx.distractionFree ? (

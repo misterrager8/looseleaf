@@ -14,16 +14,7 @@ export const FolderContext = createContext();
 
 export default function Nav() {
   const multiCtx = useContext(MultiContext);
-
-  const [theme, setTheme] = useState(
-    localStorage.getItem("looseleaf-theme") || "light",
-  );
   const [showFolders, setShowFolders] = useState(false);
-
-  useEffect(() => {
-    localStorage.setItem("looseleaf-theme", theme);
-    document.documentElement.setAttribute("data-theme", theme);
-  }, [theme]);
 
   const sorts = [
     {
@@ -100,9 +91,9 @@ export default function Nav() {
             {themes.map((x) => (
               <a
                 key={uuidv4()}
-                onClick={() => setTheme(x)}
+                onClick={() => multiCtx.setTheme(x)}
                 className={
-                  (theme === x ? "active" : "") +
+                  (multiCtx.theme === x ? "active" : "") +
                   " dropdown-item text-capitalize"
                 }>
                 {x}
@@ -273,9 +264,9 @@ export default function Nav() {
             {themes.map((x) => (
               <a
                 key={uuidv4()}
-                onClick={() => setTheme(x)}
+                onClick={() => multiCtx.setTheme(x)}
                 className={
-                  (theme === x ? "active" : "") +
+                  (multiCtx.theme === x ? "active" : "") +
                   " dropdown-item text-capitalize"
                 }>
                 {x}

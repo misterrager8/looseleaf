@@ -1,7 +1,7 @@
 @import "./colors.css";
 
 * {
-  font-family: "Roboto";
+  font-family: "Hanken Grotesk";
 }
 
 body {
@@ -179,6 +179,8 @@ textarea.full {
 
 .editor-focused {
   height: 90vh;
+  width: 65%;
+  margin-inline: auto;
 }
 
 .nav-x {
@@ -331,6 +333,7 @@ textarea.full {
 
   .editor-focused {
     height: 90vh;
+    width: unset;
   }
 
   textarea {

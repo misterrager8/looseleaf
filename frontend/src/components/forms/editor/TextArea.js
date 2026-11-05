@@ -122,7 +122,7 @@ export default function TextArea() {
     },
     {
       icon: "bi:type",
-      hotkey: "Command+1",
+      hotkey: "Command+2",
       label: "capitalize",
       format: function () {
         let words = selection.selected.split(" ");
@@ -162,7 +162,7 @@ export default function TextArea() {
     },
     {
       text: "[]",
-      hotkey: "shift+b",
+      hotkey: "shift+B",
       label: "square-brackets",
       format: `[${selection.selected}]`,
     },
@@ -173,7 +173,7 @@ export default function TextArea() {
     },
     {
       text: '""',
-      hotkey: "shift+q",
+      hotkey: "shift+Q",
       label: "double-quotes",
       format: `"${selection.selected}"`,
     },
@@ -189,7 +189,7 @@ export default function TextArea() {
     },
     {
       icon: "bi:highlighter",
-      hotkey: "Command+h",
+      hotkey: "Command+H",
       label: "highlighter",
       format: `<mark>${selection.selected}</mark>`,
     },
@@ -200,7 +200,7 @@ export default function TextArea() {
     },
     {
       icon: "bi:type-strikethrough",
-      hotkey: "Command+s",
+      hotkey: "Command+S",
       label: "type-strikethrough",
       format: `~~${selection.selected}~~`,
     },
@@ -230,7 +230,7 @@ export default function TextArea() {
     enableOnFormTags: true,
   });
 
-  useHotkeys("meta+1", () => copyFormat("capitalize"), {
+  useHotkeys("meta+2", () => copyFormat("capitalize"), {
     preventDefault: true,
     enableOnFormTags: true,
   });
